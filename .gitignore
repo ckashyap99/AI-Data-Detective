@@ -1,0 +1,58 @@
+# Python
+
+**pycache**/
+*.py[cod]
+*$py.class
+
+# Virtual Environments
+
+venv/
+.venv/
+env/
+ENV/
+
+# Conda
+
+conda-meta/
+*.conda
+
+# Environment Variables
+
+.env
+
+# IDE
+
+.vscode/
+.idea/
+
+# Jupyter
+
+.ipynb_checkpoints/
+
+# OS Files
+
+.DS_Store
+Thumbs.db
+
+# Streamlit
+
+.streamlit/secrets.toml
+
+# Logs
+
+*.log
+
+# Build
+
+build/
+dist/
+*.egg-info/
+
+# Test Files
+
+Test.csv
+
+# Temporary Files
+
+*.tmp
+*.bak
