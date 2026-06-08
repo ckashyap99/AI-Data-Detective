@@ -1,0 +1,61 @@
+import os
+
+from groq import Groq
+
+from dotenv import load_dotenv
+
+load_dotenv()
+
+
+class QAEngine:
+
+    @staticmethod
+    def answer_question(
+        question,
+        context
+    ):
+
+        client = Groq(
+            api_key=os.getenv(
+                "GROQ_API_KEY"
+            )
+        )
+
+        prompt = f"""
+You are an expert document analyst.
+
+Answer ONLY using the provided context.
+
+If the answer cannot be found in the context,
+say:
+
+'The document does not provide enough information.'
+
+Context:
+
+{context}
+
+Question:
+
+{question}
+"""
+
+        response = (
+            client.chat.completions.create(
+                model="llama-3.3-70b-versatile",
+                messages=[
+                    {
+                        "role": "user",
+                        "content": prompt
+                    }
+                ],
+                temperature=0.1
+            )
+        )
+
+        return (
+            response
+            .choices[0]
+            .message
+            .content
+        )

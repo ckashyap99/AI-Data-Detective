@@ -12,6 +12,14 @@ from app.services.evidence_builder import EvidenceBuilder
 from app.services.visualizer import Visualizer
 from app.services.recommendation_engine import RecommendationEngine
 
+from app.rag.document_loader import DocumentLoader
+from app.rag.text_chunker import TextChunker
+from app.rag.vector_store import VectorStore
+from app.rag.document_investigator import (
+    DocumentInvestigator
+)
+from app.rag.qa_engine import QAEngine
+
 
 st.set_page_config(
     page_title="AI Data Detective",
@@ -20,9 +28,209 @@ st.set_page_config(
 )
 
 st.title("🕵️ AI Data Detective")
-st.write(
-    "Upload any tabular dataset and let the detective investigate."
+st.markdown(
+    """
+### From Noise to Insight
+
+AI Data Detective investigates both:
+
+- 📊 Structured Data (CSV/XLSX)
+- 📄 Unstructured Documents (PDF/DOCX/TXT)
+
+Discover patterns, anomalies, risks, opportunities and actionable recommendations using AI.
+"""
 )
+
+###############################################################################
+# DOCUMENT INVESTIGATION
+###############################################################################
+
+st.divider()
+
+# st.header("📄 Document Investigation")
+
+document_file = st.file_uploader(
+    "Upload PDF, DOCX or TXT",
+    type=["pdf", "docx", "txt"],
+    key="document_uploader"
+)
+
+if document_file:
+
+    try:
+
+        extracted_text = (
+            DocumentLoader.load_document(
+                document_file
+            )
+        )
+
+        chunks = (
+            TextChunker.chunk_text(
+                extracted_text
+            )
+        )
+
+        vector_store = VectorStore()
+
+        vector_store.index_chunks(
+            chunks
+        )
+
+        st.success(
+            "Document loaded successfully!"
+        )
+
+        doc_tab1, doc_tab2, doc_tab3 = st.tabs(
+            [
+                "📄 Investigation Report",
+                "💬 Ask Questions",
+                "📚 Statistics"
+            ]
+        )
+
+        ###################################################################
+        # INVESTIGATION REPORT
+        ###################################################################
+
+        with doc_tab1:
+
+            st.subheader(
+                "🕵️ AI Investigation Report"
+            )
+
+            if st.button(
+                "Investigate Document"
+            ):
+
+                results = vector_store.search(
+                    "document summary key topics risks actions",
+                    top_k=8
+                )
+
+                context = "\n\n".join(
+                    results["documents"][0]
+                )
+
+                with st.spinner(
+                    "Investigating document..."
+                ):
+
+                    report = (
+                        DocumentInvestigator
+                        .investigate(
+                            context
+                        )
+                    )
+
+                st.markdown(
+                    report
+                )
+
+        ###################################################################
+        # Q&A
+        ###################################################################
+
+        with doc_tab2:
+
+            st.subheader(
+                "Ask Questions About This Document"
+            )
+
+            question = st.text_input(
+                "Enter your question"
+            )
+
+            if question:
+
+                results = vector_store.search(
+                    question,
+                    top_k=5
+                )
+
+                context = "\n\n".join(
+                    results["documents"][0]
+                )
+
+                with st.spinner(
+                    "Searching document..."
+                ):
+
+                    answer = (
+                        QAEngine.answer_question(
+                            question,
+                            context
+                        )
+                    )
+
+                st.markdown(
+                    answer
+                )
+
+                with st.expander(
+                    "🔍 Supporting Evidence"
+                ):
+
+                    for idx, chunk in enumerate(
+                        results["documents"][0],
+                        start=1
+                    ):
+
+                        st.write(
+                            f"Chunk {idx}"
+                        )
+
+                        st.write(
+                            chunk
+                        )
+
+        ###################################################################
+        # DOCUMENT STATS
+        ###################################################################
+
+        with doc_tab3:
+
+            st.subheader(
+                "Document Statistics"
+            )
+
+            col1, col2 = st.columns(
+                2
+            )
+
+            with col1:
+
+                st.metric(
+                    "Characters",
+                    len(extracted_text)
+                )
+
+            with col2:
+
+                st.metric(
+                    "Chunks",
+                    len(chunks)
+                )
+
+            st.info(
+                f"""
+                File Name: {document_file.name}
+
+                Document successfully indexed in ChromaDB.
+
+                Ready for investigation and Q&A.
+                """
+            )
+
+    except Exception as e:
+
+        st.error(
+            str(e)
+        )
+
+st.divider()
+
+#################################################################################
 
 uploaded_file = st.file_uploader(
     "Upload a CSV or Excel file",
