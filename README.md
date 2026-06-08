@@ -204,7 +204,7 @@ Automatically generates:
 
 ## LLM
 
-- Groq API or Microsoft AI Ecosystem Compatible
+- Groq API(reference) or Microsoft AI Ecosystem Compatible
 - Llama 3.3 70B Versatile
 
 ## Embeddings
@@ -380,7 +380,7 @@ The following AI tools were used during development:
 
 # 👨‍💻 Author
 
-**Chethan Kashyap**
+**Chethan Kashyap**,
 **Vinay Desai**
 
 Built for the Microsoft AI Hackathon 2026.
