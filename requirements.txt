@@ -1,4 +1,7 @@
 streamlit
+
+protobuf==3.20.3
+
 pandas
 numpy
 scikit-learn
@@ -9,14 +12,12 @@ openpyxl
 python-dotenv
 groq
 
-chromadb
+chromadb==0.5.5
 
-sentence-transformers==2.7.0
-transformers==4.41.2
+sentence-transformers==3.0.1
+transformers==4.44.2
 
-langchain
-langchain-community
-langchain-text-splitters
+torch
 
 pymupdf
 python-docx
