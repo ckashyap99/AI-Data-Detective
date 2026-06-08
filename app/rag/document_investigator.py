@@ -1,4 +1,5 @@
 import os
+import streamlit as st
 
 from groq import Groq
 
@@ -13,7 +14,14 @@ class DocumentInvestigator:
     def investigate(context):
 
         client = Groq(
-            api_key=os.getenv("GROQ_API_KEY")
+            api_key = (
+                st.secrets.get(
+                    "GROQ_API_KEY",
+                    os.getenv(
+                        "GROQ_API_KEY"
+                    )
+                )
+            )
         )
 
         prompt = f"""

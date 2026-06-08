@@ -1,5 +1,6 @@
 import os
 import json
+import streamlit as st
 
 from groq import Groq
 from dotenv import load_dotenv
@@ -13,7 +14,14 @@ class InsightGenerator:
     def generate(evidence):
 
         client = Groq(
-            api_key=os.getenv("GROQ_API_KEY")
+            api_key = (
+                st.secrets.get(
+                    "GROQ_API_KEY",
+                    os.getenv(
+                        "GROQ_API_KEY"
+                    )
+                )
+            )
         )
 
         prompt = f"""
