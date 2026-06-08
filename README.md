@@ -1,3 +1,7 @@
+# Live Demo
+https://ai-data-detective-emvqbm5anovwc5zbajnkj6.streamlit.app/
+
+
 # 🕵️ AI Data Detective
 
 > Turning Raw Data into Actionable Intelligence with the Power of AI
