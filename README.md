@@ -63,7 +63,7 @@ Upload PDF, DOCX, or TXT documents and:
 
 # 🏗️ System Architecture
 
-![Architecture](architecture.png)
+![Architecture](Final_Architecture.png)
 
 ---
 
